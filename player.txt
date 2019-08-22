@@ -1,0 +1,257 @@
+drop database tennis;
+create database tennis;
+
+use tennis;
+
+show tables;
+
+drop table player
+
+create table player (
+   rid int auto_increment primary key,
+   name varchar(20),
+   dob  date,
+   photo varchar(100),
+   email varchar(100),
+   pro varchar(10)
+);
+
+insert into player values ("","Andy Roddick","1980-3-18","face1.jpg","andy@eee.com","2001");
+insert into player values ("","Naomi Osaka","1997-10-16","face2.jpg","naomi@eee.com","2013");
+insert into player values ("","Novak Djokovic","1987-5-22","face3.jpg","novak@eee.com","2003");
+insert into player values ("","Li Na","1982-2-26","face4.jpg","na@eee.com","1999");
+insert into player values ("","Roger Federer","1981-8-8","face5.jpg","roger@eee.com","1998");
+
+
+create table title (
+   tid int auto_increment primary key,
+   title_name varchar(200)
+);
+
+insert into title values ("","The Championships, Wimbledon");
+insert into title values ("","Championnats Internationaux de France de Tennis");
+insert into title values ("","US Open");
+insert into title values ("","Australian Open");
+
+
+
+
+create table countries (
+   cid int auto_increment primary key,
+   country_name varchar(200),
+   tid int,
+   foreign key(tid) references title(tid)
+);
+
+insert into countries values ("","UK",1);
+insert into countries values ("","FRANCE",2);
+insert into countries values ("","US",3);
+insert into countries values ("","AUSTRALIA",4);
+
+
+select * 
+from title, countries
+where title.tid = countries.tid;
+
+
+
+
+
+
+drop table winner;
+
+create table winner (
+   wid int auto_increment primary key,
+   rid int,
+   tid int,
+   win_year year,
+   foreign key(rid) references player(rid),
+   foreign key(tid) references title(tid)
+);
+
+insert into winner values ("",1,3,"2003");
+insert into winner values ("",2,3,"2018");
+insert into winner values ("",2,4,"2019");
+ 
+insert into winner values ("",3,4,"2008");
+insert into winner values ("",3,4,"2011");
+insert into winner values ("",3,3,"2011");
+insert into winner values ("",3,4,"2012");
+insert into winner values ("",3,4,"2013");
+insert into winner values ("",3,1,"2014");
+insert into winner values ("",3,4,"2015");
+insert into winner values ("",3,1,"2015");
+insert into winner values ("",3,3,"2015");
+insert into winner values ("",3,4,"2016");
+insert into winner values ("",3,2,"2016");
+insert into winner values ("",3,1,"2018");
+insert into winner values ("",3,3,"2018");
+insert into winner values ("",3,4,"2019");
+
+insert into winner values ("",3,1,"2019");
+
+
+
+insert into winner values ("",4,2,"2011");
+insert into winner values ("",4,4,"2014");
+
+
+
+insert into winner values ("",5,1,"2003");
+insert into winner values ("",5,4,"2004");
+insert into winner values ("",5,1,"2004");
+insert into winner values ("",5,3,"2004");
+insert into winner values ("",5,1,"2005");
+insert into winner values ("",5,3,"2005");
+insert into winner values ("",5,4,"2006");
+insert into winner values ("",5,1,"2006");
+insert into winner values ("",5,3,"2006");
+insert into winner values ("",5,4,"2007");
+insert into winner values ("",5,1,"2007");
+insert into winner values ("",5,3,"2007");
+insert into winner values ("",5,3,"2008");
+insert into winner values ("",5,2,"2009");
+insert into winner values ("",5,1,"2009");
+insert into winner values ("",5,4,"2010");
+insert into winner values ("",5,1,"2012");
+insert into winner values ("",5,4,"2017");
+insert into winner values ("",5,1,"2017");
+insert into winner values ("",5,4,"2018");
+
+
+insert into winner values ("",8,2,"2003");
+insert into winner values ("",8,3,"2003");
+insert into winner values ("",8,4,"2004");
+insert into winner values ("",8,2,"2005");
+insert into winner values ("",8,2,"2006");
+insert into winner values ("",8,2,"2007");
+insert into winner values ("",8,3,"2007");
+
+
+
+insert into winner values ("",5,4,"2018");
+
+
+insert into winner values ("",11,1,"2004");
+insert into winner values ("",11,3,"2006");
+insert into winner values ("",11,4,"2008");
+insert into winner values ("",11,2,"2012");
+insert into winner values ("",11,2,"2014");
+
+
+
+
+
+
+
+
+
+drop view win_records
+create view win_records as
+select p.name, t.title_name, w.win_year 
+from player p, title t, winner w
+where p.rid = w.rid
+  and t.tid = w.tid;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+select * 
+from reader;
+
+select * 
+from reader
+order by name desc;
+
+select name, dob
+from reader;
+
+select dob, name
+from reader;
+
+select * 
+from reader
+where rid in (1,2,3);
+
+select * 
+from reader
+where rid = 4
+  or  rid = 2;
+  
+select count(*)
+from reader;  
+
+select sum(copies) as total_copies
+from book;
+
+select *
+from book;
+
+select * 
+from player, winner
+where player.rid = winner.rid;
+
+create view win_record as
+select p.name, t.title_name, w.win_year 
+from player p, title t, winner w
+where p.rid = w.rid
+  and t.tid = w.tid;
+
+
+
+
+
+
+
+
+
+
+select *
+from book a, publisher b
+where a.pid = b.pid;
+
+create view book_info as
+select a.bid, a.title, a.copies, b.pub_name
+from book a, publisher b
+where a.pid = b.pid;
+
+select * from book_info;
+
+create view loan_record as
+select a.rid, a.name, b.loan_date, c.title, d.pub_name
+from reader a, loan b, book c, publisher d
+where a.rid = b.rid
+  and b.bid = c.bid
+  and c.pid = d.pid;
+
+update reader 
+set phone = "66666666"
+where rid = 1;
+
+delete from book
+where bid = 5;
+
+alter table book
+add book_cover varchar(100);
+
+update book
+set book_cover = 'cover1.jpg'
+where bid = 1;
+
+drop table loan;
+
+
+
+
